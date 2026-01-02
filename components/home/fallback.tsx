@@ -2,6 +2,7 @@ import React from 'react';
 import DataTable from '@/components/DataTable';
 import { cn } from '@/lib/utils';
 
+//1:09:10 create the FALLBACK UI components for each of the sections on the home page
 export const CoinOverviewFallback = () => {
   return (
     <div id="coin-overview-fallback">
