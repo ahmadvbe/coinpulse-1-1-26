@@ -13,8 +13,9 @@ import { TrendingCoinsFallback } from './fallback';
 const TrendingCoins = async () => {
   //53:49 turn this into asyn to call the fetch 
  // - so we can await calls  right here
-  let trendingCoins;
+  let trendingCoins; //extract the trending coings at the top
 
+    //1:13:55 add error handling for the data fetch operations witht he try and catch block- wrapping the call itslef within a try and catch
   try { //getting the data from the API
     //we ll call the fetcher function we created earlier within the coingecko actions 
     //to fetch the trending coins endpoint  59:15

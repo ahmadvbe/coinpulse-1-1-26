@@ -72,6 +72,9 @@ export function timeAgo(date: string | number | Date): string {
   return past.toISOString().split('T')[0];
 }
 
+//convert and set the initial data into the series 1:37:08 but the format that data is within is not gonna work
+      //we hve to make it work specifically for the chart 1:37:30
+      //  1:38:10  properly formats it into the data that the charts accepts
 export function convertOHLCData(data: OHLCData[]) {
   return data
     .map((d) => ({

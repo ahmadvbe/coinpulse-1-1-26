@@ -1,3 +1,5 @@
+//1:24:40 we ll create here all the sorts of the fdiff constants that we can reuse accross our app
+
 import {
   CandlestickSeriesPartialOptions,
   ChartOptions,
@@ -104,7 +106,7 @@ export const PERIOD_CONFIG: Record<
   max: { days: 'max' },
 };
 
-export const PERIOD_BUTTONS: { value: Period; label: string }[] = [
+export const PERIOD_BUTTONS: { value: Period; label: string }[] = [ //1:25:00
   { value: 'daily', label: '1D' },
   { value: 'weekly', label: '1W' },
   { value: 'monthly', label: '1M' },
