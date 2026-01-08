@@ -27,7 +27,8 @@ const CoinOverview = async () => {
         // - so we can await calls  right here
 
       //1-the first Fetcher func we return the coin details object
-      fetcher<CoinDetailsData> //define the type of data we re fetching
+      fetcher<CoinDetailsData> //define the type of data we re fetching 
+      //1:47:05 remove await
       ('/coins/bitcoin', { //endpoint 55:20
         dex_pair_format: 'symbol', //additional option object 55:28 
                     // allows us to return back a simple human readable token symbol like BTC for bitcoin
@@ -52,8 +53,9 @@ const CoinOverview = async () => {
       <div id="coin-overview">
 
         <CandlestickChart  //1:20:25 use of the candleStickChart-- and we pass the following as children to the candleStcik chart
-          data={coinOHLCData} 
-          coinId="bitcoin">
+                  //1:21:40 implementing the candleStickChart
+             data={coinOHLCData} 
+             coinId="bitcoin">
           <div //26:50
           className="header pt-2">
             <Image //56:20

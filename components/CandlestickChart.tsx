@@ -53,7 +53,7 @@ const CandlestickChart = ({ //destruct the children
   //data of a type <ohlcData[]> an array of those data points
   //will initialize it as the data that we receive through props 1:31:18 and then if it changes we can actually accomodate for those changes
 
-  const [isPending, startTransition] = useTransition(); //isPending to check whether the data are being loaded  1:24:10
+  const [isPending, startTransition] = useTransition(); //isPending to check whether the data are being loaded  1:24:10 1:45:27
   //1:34:05 new react hook that transition the state byt keep the UI responsive during async updates
 
 
@@ -114,7 +114,7 @@ const CandlestickChart = ({ //destruct the children
                                    getCandlestickConfig());
 
       
-    const convertedToSeconds = ohlcData.map(
+    const convertedToSeconds = ohlcData.map( //1:46:25 convert to seconds
       (item) => [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as OHLCData,
     );
 
@@ -145,7 +145,7 @@ const CandlestickChart = ({ //destruct the children
       chartRef.current = null;
       candleSeriesRef.current = null;
     };
-  }, [height, period]); //if the height changes we can reposition it  1:35:24 
+  }, [height, period]); //if the height changes we can reposition it  1:35:24 1:45:55
          
 
   //// -- we have to make this charts work with diff periods also 1:41:08
@@ -231,7 +231,7 @@ const CandlestickChart = ({ //destruct the children
                 key={value}
                 className={liveInterval === value ? 'config-button-active' : 'config-button'}
                 onClick={() => setLiveInterval && setLiveInterval(value)}
-                disabled={isPending}
+                disabled={isPending}//use isPending instead of isLoading- loading state is never updated use isPending instead 1:45:30
               >
                 {label}
               </button>
