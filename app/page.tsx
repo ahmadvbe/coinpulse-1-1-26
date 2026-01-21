@@ -41,7 +41,7 @@ const Page = async () => { //53:49 turn this into asyn to call the fetch
             {/* Rendering the TRENDING Coins 1:07:18 */}
         <Suspense 
               fallback={//1:09:10 create the FALLBACK UI components for each of the sections on the home page
-              <TrendingCoinsFallback //these are basically some emopty skeleton UIs with 
+              <TrendingCoinsFallback //these are basically some empty skeleton UIs with 
              // some styling that replicate the structure 
              //but not data of the website
               />
@@ -53,8 +53,12 @@ const Page = async () => { //53:49 turn this into asyn to call the fetch
 
       <section //25:26 another section
          className="w-full mt-7 space-y-4">
-        <Suspense fallback={<CategoriesFallback />}>
-          <Categories />
+        <Suspense  //1:50:10 wrap it in a suspense component
+            fallback={<CategoriesFallback />} //2:01:20 add a skeleton loader as fallback on loading 
+            // --show an empty table waiting for the data to pop up
+            >
+          <Categories  //1:49:50 Implementing Categories part of our app
+              />
         </Suspense>
       </section>
     </main>

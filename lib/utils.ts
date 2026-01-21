@@ -88,7 +88,8 @@ export function convertOHLCData(data: OHLCData[]) {
 }
 
 export const ELLIPSIS = 'ellipsis' as const;
-export const buildPageNumbers = (
+export const buildPageNumbers = ( //2:12:14 on wteevr page we re on its gonna provide us with couple of pages before and after it
+  //so we can v easily paginate through them
   currentPage: number,
   totalPages: number,
 ): (number | typeof ELLIPSIS)[] => {

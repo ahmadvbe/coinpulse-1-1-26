@@ -50,7 +50,7 @@ const DataTable = <T,>({
               key={i}// needs a key since we re mapping over it 35:13s
               className={cn( //provide multiple classNames
                 'bg-dark-400 text-purple-100 py-4 first:pl-5 last:pr-5',
-                headerCellClassName,
+                headerCellClassName,//1:56:20
                 column.headClassName,
               )}
             >
@@ -75,7 +75,7 @@ const DataTable = <T,>({
               <TableCell //where we ll display a Tablecell 36:30 rendering the content
                 key={columnIndex} //37:57
                 className={cn('py-4 first:pl-5 last:pr-5', //38:02
-                         bodyCellClassName, 
+                         bodyCellClassName, //1:56:40
                          column.cellClassName)}
               >
                 {/* //where we ll display a Tablecell 36:30 rendering the content
