@@ -1,10 +1,14 @@
-'use client';
+'use client'; //use state use
 
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { formatCurrency } from '@/lib/utils';
 
+//  3:32:40 implementing the convertor
+//                 use of shadcn select
+//                 use of shadcn input
+//                 coinpulse/components/Converter.tsx
 import {
   Select,
   SelectContent,
@@ -15,17 +19,21 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
-  const [currency, setCurrency] = useState('usd');
-  const [amount, setAmount] = useState('10');
+const Converter = ({ symbol, icon, priceList }: ConverterProps) => { //3:34:15 destruct/accept  the props
 
-  const convertedPrice = (parseFloat(amount) || 0) * (priceList[currency] || 0);
+  //declare a couple of diff states managing the values
+  const [currency, setCurrency] = useState('usd'); //currency that we re currenlty viewing the exchange rate for - start it with USD
+  const [amount, setAmount] = useState('10'); //amount to be displayed at first
 
+  const convertedPrice = (parseFloat(amount) || 0) * (priceList[currency] || 0); //3:35
+
+  //JSX OF THE CONVERTER 3:35:40
   return (
     <div id="converter">
       <h4>{symbol.toUpperCase()} Converter</h4>
 
-      <div className="panel">
+      <div //3:37:54 wrap all of the following into a PANEL - so we can display several inputs within it
+        className="panel">
         <div className="input-wrapper">
           <Input
             type="number"
@@ -43,13 +51,16 @@ const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
         <div className="divider">
           <div className="line" />
 
-          <Image src="/converter.svg" alt="converter" width={32} height={32} className="icon" />
+          <Image //3:38:35
+            src="/converter.svg" alt="converter" width={32} height={32} className="icon" />
         </div>
 
-        <div className="output-wrapper">
+        <div //3:39:10
+          className="output-wrapper">
           <p>{formatCurrency(convertedPrice, 2, currency, false)}</p>
 
-          <Select value={currency} onValueChange={setCurrency}>
+          <Select //select ur native currency 3:39:50
+            value={currency} onValueChange={setCurrency}>
             <SelectTrigger className="select-trigger" value={currency}>
               <SelectValue placeholder="Select" className="select-value">
                 {currency.toUpperCase()}
