@@ -75,32 +75,35 @@ export async function fetcher<T>( //defining the new dynamic type that we ll pas
   return response.json();
 }
 
-export async function getPools(
+export async function getPools( //2:58:50 makes it super eassy to us to have access to most relevant pool for a specific coin
+  //2:59:06
   id: string,
   network?: string | null,
   contractAddress?: string | null,
 ): Promise<PoolData> {
-  const fallback: PoolData = {
+  const fallback: PoolData = { //we fisrt define a fallback of a type pool data 
+    //each pool will have an id address name and network starting as empty strings
     id: '',
     address: '',
     name: '',
     network: '',
   };
 
-  if (network && contractAddress) {
-    try {
+  if (network && contractAddress) { //then if both exists
+    try { //-we can get the pool data by using the fetcher helper func and a corresponding endpoint url giving us access to the pools
       const poolData = await fetcher<{ data: PoolData[] }>(
         `/onchain/networks/${network}/tokens/${contractAddress}/pools`,
       );
 
-      return poolData.data?.[0] ?? fallback;
+      return poolData.data?.[0] ?? fallback; //once we get it we re gonna return the first pool found
     } catch (error) {
       console.log(error);
       return fallback;
     }
   }
 
-  try {
+  try { //but if we dnt hve them (network && contractAddress) we can try to get the 
+  // pool data by just searching '/onchain/search/pools' endpoint and pass the query =id
     const poolData = await fetcher<{ data: PoolData[] }>('/onchain/search/pools', { query: id });
 
     return poolData.data?.[0] ?? fallback;

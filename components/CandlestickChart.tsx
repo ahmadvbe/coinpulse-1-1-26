@@ -26,10 +26,12 @@ const CandlestickChart = ({ //destruct the children
   coinId,
   height = 360, //chart we wana dispaly 1:22:20
   initialPeriod = 'daily', //by default set to daily
-  liveOhlcv = null,
+
+  liveOhlcv = null, //3:10:50  3:08:40 we ll also make the chart update in realtime and the header
   mode = 'historical',
   liveInterval,
   setLiveInterval,
+  
 }: CandlestickChartProps) => { //of a type CandlestickChartProps
 
       //1st ref: to the DOM element that will host the chart
@@ -44,8 +46,11 @@ const CandlestickChart = ({ //destruct the children
       const candleSeriesRef = useRef<ISeriesApi<'Candlestick'> //<> type of the chart
                                   | null>(null);
 
-
+//to be able to update in realtime we have to create one additional ref 3:11:11
+//to keep track of the previous length of the data that we re displaying
+//this will help us decide whether we need to refit the chart whenever new data comes in
   const prevOhlcDataLength = useRef<number>(data?.length || 0);
+
 
   const [period, setPeriod] = useState(initialPeriod); //1:27:35 the period will be a state that we should keep track off-daily by default
 
@@ -73,7 +78,8 @@ const CandlestickChart = ({ //destruct the children
         precision: 'full',
       });
 
-      startTransition(() => { //1:34:05 new react hook that transition the state byt keep the UI responsive during async updates
+      startTransition(() => { //it is non blocking for the UI 3:11:40
+        //1:34:05 new react hook that transition the state byt keep the UI responsive during async updates
         // and we started the transition  1:34:40
         setOhlcData(newData ?? []); //if the data changes update the ohlcData 1:33:40 and if it doesnt exist set it to an empty array
       });
@@ -82,7 +88,7 @@ const CandlestickChart = ({ //destruct the children
     }
   };
 
-  //know which button is currenlty active 1:26:55
+  //know which button is currenlty active 1:26:55 3:11:50
   const handlePeriodChange = (newPeriod: Period) => {//accepting a newPeriod
     if (newPeriod === period) return; //if the newperiod hasnt changed dnt do antg 1:27:17
 
@@ -149,7 +155,7 @@ const CandlestickChart = ({ //destruct the children
          
 
   //// -- we have to make this charts work with diff periods also 1:41:08
-  useEffect(() => {
+  useEffect(() => { //live updates will take place in the 2nd useeffect()
     if (!candleSeriesRef.current) return;//1:41:26 if there is no candleSeriesref right now=>the chart hasnt been initialized yet
     //in that case we cant modify the data 
     //else 1:41:37
@@ -163,36 +169,40 @@ const CandlestickChart = ({ //destruct the children
     );
 
     //1:43:18 convertedToSeconds complains bcz of having an array within an array- we wana have one array
+      //live updates will take place now
+    let merged: OHLCData[]; //3:12:30
 
-    let merged: OHLCData[];
+    if (liveOhlcv) {//3:12:42 if we re tracking the live data
+      const liveTimestamp = liveOhlcv[0];//in that case we wana access to the live time stamp
 
-    if (liveOhlcv) {
-      const liveTimestamp = liveOhlcv[0];
-
+        //3:12:50 we wana check if we re still within the same candle or if we re in a new candle
       const lastHistoricalCandle = convertedToSeconds[convertedToSeconds.length - 1];
 
-      if (lastHistoricalCandle && lastHistoricalCandle[0] === liveTimestamp) {
-        merged = [...convertedToSeconds.slice(0, -1), liveOhlcv];
+      if (lastHistoricalCandle && lastHistoricalCandle[0] === liveTimestamp) { //if the last value of the candle is = to the live timestamp
+        merged = [...convertedToSeconds.slice(0, -1), liveOhlcv]; //=>if yes  update the last candle with the right data
       } else {
-        merged = [...convertedToSeconds, liveOhlcv];
+        merged = [...convertedToSeconds, liveOhlcv]; //==> if not simply append a new live candle at the end
       }
-    } else {
+    } else { //if we re nt live 3:14:26
       merged = convertedToSeconds;
     } 
 
-    merged.sort((a, b) => a[0] - b[0]);
+    merged.sort((a, b) => a[0] - b[0]); //fianlly we wana sort the candles ascending in time
 
-    const converted = convertOHLCData(merged); //once we get the above data  1:42:42
-    candleSeriesRef.current.setData(converted);// 1:42:50 then re update the candleSeries Ref
+    const converted = convertOHLCData(merged); //pass in the merged data instradd of the regular candlestickdata
+    // once we get the above data  1:42:42
+    candleSeriesRef.current.setData(converted);// 1:42:50 then re update the candleSeries Ref 3:15:00
 
-    const dataChanged = prevOhlcDataLength.current !== ohlcData.length;
+    //3:15:55 fits content whenever the data changes on period, not on live updates
+    const dataChanged = prevOhlcDataLength.current !== ohlcData.length; //=>if that is the case ==>it has changed
 
-    if (dataChanged || mode === 'historical') {
+    if (dataChanged || mode === 'historical') { //3:16:25 in that case we can fit the content for the time scale
       chartRef.current?.timeScale().fitContent(); //and we wana update the chart to refit the content 1:43:00
-      prevOhlcDataLength.current = ohlcData.length;
+      prevOhlcDataLength.current = ohlcData.length; //update it with new data
     }
   }, [ohlcData, period, liveOhlcv, mode]); //this time it has to react on the ohlc 
   // data provided that will be modified depending on the period to be clicked on  1:41:18
+  //live updates will take place within this useeffect()
 
   return ( //1:22:50 Create the JSX for the chart
     <div //1:21:50
@@ -222,7 +232,7 @@ const CandlestickChart = ({ //destruct the children
           ))}
         </div>
 
-        {liveInterval && (
+        {liveInterval && ( //3:16:55 check whether we hve the live interval
           <div  
            className="button-group">
             <span className="text-sm mx-2 font-medium text-purple-100/50">Update Frequency:</span>
@@ -230,7 +240,7 @@ const CandlestickChart = ({ //destruct the children
               <button
                 key={value}
                 className={liveInterval === value ? 'config-button-active' : 'config-button'}
-                onClick={() => setLiveInterval && setLiveInterval(value)}
+                onClick={() => setLiveInterval && setLiveInterval(value)}//3:18:15 check whether a setinterval func exists and if yes call it and pass in the proper value
                 disabled={isPending}//use isPending instead of isLoading- loading state is never updated use isPending instead 1:45:30
               >
                 {label}
